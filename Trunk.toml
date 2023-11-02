@@ -1,0 +1,6 @@
+[build]
+filehash = false
+# dist = "./docs"
+# The public URL from which assets are to be served.
+# public_
+public_url = "/"
