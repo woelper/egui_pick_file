@@ -19,7 +19,7 @@ impl Default for BrowseApp {
 impl BrowseApp {
     /// Called once before the first frame.
     pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
-       BrowseApp::default()
+        BrowseApp::default()
     }
 }
 
