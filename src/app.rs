@@ -19,7 +19,7 @@ impl Default for BrowseApp {
 impl BrowseApp {
     /// Called once before the first frame.
     pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
-       BrowseApp::default()
+        BrowseApp::default()
     }
 }
 
@@ -36,11 +36,16 @@ impl eframe::App for BrowseApp {
             if ui.button("Open text file").clicked() {
                 let sender = self.text_channel.0.clone();
                 let task = rfd::AsyncFileDialog::new().pick_file();
+                // Context is wrapped in an Arc so it's cheap to clone as per:
+                // > Context is cheap to clone, and any clones refers to the same mutable data (Context uses refcounting internally).
+                // Taken from https://docs.rs/egui/0.24.1/egui/struct.Context.html
+                let ctx = ui.ctx().clone();
                 execute(async move {
                     let file = task.await;
                     if let Some(file) = file {
                         let text = file.read().await;
                         let _ = sender.send(String::from_utf8_lossy(&text).to_string());
+                        ctx.request_repaint();
                     }
                 });
             }
