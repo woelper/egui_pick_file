@@ -1,5 +1,10 @@
-## Browse
-Example app showing how to pick a file on web and desktop.
+## Egui file browser
+
+Example app showing how to pick a file on both web and desktop.
+
+The web application can be accessed here:
+
+https://woelper.github.io/egui_pick_file/
 
 
 For native:

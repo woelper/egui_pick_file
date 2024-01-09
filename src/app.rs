@@ -11,7 +11,7 @@ impl Default for BrowseApp {
     fn default() -> Self {
         Self {
             text_channel: channel(),
-            sample_text: "yo".into(),
+            sample_text: "This is some sample text".into(),
         }
     }
 }
@@ -26,14 +26,14 @@ impl BrowseApp {
 impl eframe::App for BrowseApp {
     fn update(&mut self, ctx: &Context, _frame: &mut eframe::Frame) {
         // assign sample text once it comes in
-        if let Ok(f) = self.text_channel.1.try_recv() {
-            self.sample_text = f;
+        if let Ok(text) = self.text_channel.1.try_recv() {
+            self.sample_text = text;
         }
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.label(&self.sample_text);
+            ui.text_edit_multiline(&mut self.sample_text);
             // a simple button opening the dialog
-            if ui.button("Open text file").clicked() {
+            if ui.button("📂 Open text file").clicked() {
                 let sender = self.text_channel.0.clone();
                 let task = rfd::AsyncFileDialog::new().pick_file();
                 // Context is wrapped in an Arc so it's cheap to clone as per:
@@ -46,6 +46,17 @@ impl eframe::App for BrowseApp {
                         let text = file.read().await;
                         let _ = sender.send(String::from_utf8_lossy(&text).to_string());
                         ctx.request_repaint();
+                    }
+                });
+            }
+
+            if ui.button("💾 Save text to file").clicked() {
+                let task = rfd::AsyncFileDialog::new().save_file();
+                let contents = self.sample_text.clone();
+                execute(async move {
+                    let file = task.await;
+                    if let Some(file) = file {
+                        _ = file.write(contents.as_bytes()).await;
                     }
                 });
             }
