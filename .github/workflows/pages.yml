@@ -4,7 +4,7 @@ name: Github Pages
 on:
   push:
     branches:
-      - master
+      - main
 # to only run when you do a new github release, comment out above part and uncomment the below trigger.
 # on:
 #   release:
