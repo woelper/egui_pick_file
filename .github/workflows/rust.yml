@@ -13,6 +13,8 @@ jobs:
     name: Check
     runs-on: ubuntu-latest
     steps:
+      - name: Install rfd dependecy for linux
+        run: sudo apt install libgtk-3-dev -y # From https://docs.rs/rfd/latest/rfd/#linux--bsd-backends
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
